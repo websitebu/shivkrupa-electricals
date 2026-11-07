@@ -59,4 +59,86 @@ primaryNav.querySelectorAll("a").forEach((link) => {
   });
 });
 
+const carousel = document.querySelector(".hero-carousel");
+const slides = [...carousel.querySelectorAll(".carousel-slide")];
+const carouselDots = [...carousel.querySelectorAll(".carousel-dots button")];
+const carouselCounter = carousel.querySelector(".carousel-counter");
+const carouselToggle = carousel.querySelector(".carousel-toggle");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let activeSlide = 0;
+let isPlaying = !prefersReducedMotion.matches;
+let isHovered = false;
+let isFocused = false;
+let carouselTimer;
+
+function renderSlide(index) {
+  activeSlide = (index + slides.length) % slides.length;
+  slides.forEach((slide, slideIndex) => {
+    const isActive = slideIndex === activeSlide;
+    slide.hidden = !isActive;
+    slide.classList.toggle("is-active", isActive);
+    carouselDots[slideIndex].setAttribute("aria-current", String(isActive));
+  });
+  const marathiDigits = String(activeSlide + 1).padStart(2, "0").replace(/\d/g, (digit) => "०१२३४५६७८९"[Number(digit)]);
+  carouselCounter.textContent = `${marathiDigits} / ०३`;
+}
+
+function updateCarouselTimer() {
+  window.clearInterval(carouselTimer);
+  if (isPlaying && !isHovered && !isFocused && !document.hidden) {
+    carouselTimer = window.setInterval(() => renderSlide(activeSlide + 1), 5000);
+  }
+  carouselToggle.textContent = isPlaying ? "Ⅱ" : "▶";
+  carouselToggle.setAttribute("aria-label", isPlaying ? "स्लाइडशो थांबवा" : "स्लाइडशो सुरू करा");
+  carouselToggle.setAttribute("aria-pressed", String(!isPlaying));
+}
+
+carousel.querySelector(".carousel-previous").addEventListener("click", () => {
+  renderSlide(activeSlide - 1);
+  updateCarouselTimer();
+});
+
+carousel.querySelector(".carousel-next").addEventListener("click", () => {
+  renderSlide(activeSlide + 1);
+  updateCarouselTimer();
+});
+
+carouselDots.forEach((dot, index) => {
+  dot.addEventListener("click", () => {
+    renderSlide(index);
+    updateCarouselTimer();
+  });
+});
+
+carouselToggle.addEventListener("click", () => {
+  isPlaying = !isPlaying;
+  updateCarouselTimer();
+});
+
+carousel.addEventListener("mouseenter", () => {
+  isHovered = true;
+  updateCarouselTimer();
+});
+
+carousel.addEventListener("mouseleave", () => {
+  isHovered = false;
+  updateCarouselTimer();
+});
+
+carousel.addEventListener("focusin", () => {
+  isFocused = true;
+  updateCarouselTimer();
+});
+
+carousel.addEventListener("focusout", (event) => {
+  if (!carousel.contains(event.relatedTarget)) {
+    isFocused = false;
+    updateCarouselTimer();
+  }
+});
+
+document.addEventListener("visibilitychange", updateCarouselTimer);
+renderSlide(activeSlide);
+updateCarouselTimer();
+
 document.querySelector("#current-year").textContent = new Date().getFullYear();
