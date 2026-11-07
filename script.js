@@ -62,8 +62,6 @@ primaryNav.querySelectorAll("a").forEach((link) => {
 const carousel = document.querySelector(".hero-carousel");
 const slides = [...carousel.querySelectorAll(".carousel-slide")];
 const carouselDots = [...carousel.querySelectorAll(".carousel-dots button")];
-const carouselCounter = carousel.querySelector(".carousel-counter");
-const carouselToggle = carousel.querySelector(".carousel-toggle");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let activeSlide = 0;
 let isPlaying = !prefersReducedMotion.matches;
@@ -79,8 +77,6 @@ function renderSlide(index) {
     slide.classList.toggle("is-active", isActive);
     carouselDots[slideIndex].setAttribute("aria-current", String(isActive));
   });
-  const marathiDigits = String(activeSlide + 1).padStart(2, "0").replace(/\d/g, (digit) => "०१२३४५६७८९"[Number(digit)]);
-  carouselCounter.textContent = `${marathiDigits} / ०३`;
 }
 
 function updateCarouselTimer() {
@@ -88,31 +84,13 @@ function updateCarouselTimer() {
   if (isPlaying && !isHovered && !isFocused && !document.hidden) {
     carouselTimer = window.setInterval(() => renderSlide(activeSlide + 1), 5000);
   }
-  carouselToggle.textContent = isPlaying ? "Ⅱ" : "▶";
-  carouselToggle.setAttribute("aria-label", isPlaying ? "स्लाइडशो थांबवा" : "स्लाइडशो सुरू करा");
-  carouselToggle.setAttribute("aria-pressed", String(!isPlaying));
 }
-
-carousel.querySelector(".carousel-previous").addEventListener("click", () => {
-  renderSlide(activeSlide - 1);
-  updateCarouselTimer();
-});
-
-carousel.querySelector(".carousel-next").addEventListener("click", () => {
-  renderSlide(activeSlide + 1);
-  updateCarouselTimer();
-});
 
 carouselDots.forEach((dot, index) => {
   dot.addEventListener("click", () => {
     renderSlide(index);
     updateCarouselTimer();
   });
-});
-
-carouselToggle.addEventListener("click", () => {
-  isPlaying = !isPlaying;
-  updateCarouselTimer();
 });
 
 carousel.addEventListener("mouseenter", () => {
