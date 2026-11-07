@@ -57,9 +57,9 @@ h1 em, h2 em { color: var(--green); font-style: normal; }
 .hero-note strong { color: var(--ink); font-size: 11px; }
 
 .hero-art { min-height: 445px; position: relative; overflow: hidden; border-radius: 5px; background: #e6edda; }
-.hero-carousel::before { position: absolute; inset: 0; z-index: 1; background-image: radial-gradient(#36584520 .8px, transparent .8px); background-size: 14px 14px; content: ""; opacity: .7; pointer-events: none; }
 .carousel-slides, .carousel-slide { position: absolute; inset: 0; }
 .carousel-slide[hidden] { display: none; }
+.carousel-photo { width: 100%; height: 100%; display: block; object-fit: cover; }
 .carousel-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #526357; }
 .placeholder-one { background: radial-gradient(circle at 75% 22%, #d8e992 0 18%, transparent 18.5%), #e6edda; }
 .placeholder-two { background: radial-gradient(circle at 28% 80%, #d8e992 0 18%, transparent 18.5%), #e7e9dd; }
